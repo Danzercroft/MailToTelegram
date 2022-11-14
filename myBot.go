@@ -1,11 +1,19 @@
 package main
 
 import (
+	"log"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI("")
+
+	config, err := LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+
+	bot, err := tgbotapi.NewBotAPI(config.APIToken)
 	if err != nil {
 		panic(err)
 	}
@@ -30,6 +38,9 @@ func main() {
 		// is up to. We only want to look at messages for now, so we can
 		// discard any other updates.
 		if update.Message == nil {
+			continue
+		}
+		if update.Message.Chat.ID != 405137530 {
 			continue
 		}
 
