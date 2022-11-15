@@ -3,7 +3,8 @@ package main
 import "github.com/spf13/viper"
 
 type Config struct {
-	APIToken string `mapstructure:"APIToken"`
+	APIToken string `mapstructure:"API_TOKEN"`
+	ChatId   int64  `mapstructure:"CHAT_ID"`
 }
 
 // LoadConfig reads configuration from file or environment variables.

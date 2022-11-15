@@ -40,7 +40,7 @@ func main() {
 		if update.Message == nil {
 			continue
 		}
-		if update.Message.Chat.ID != 405137530 {
+		if update.Message.Chat.ID != config.ChatId {
 			continue
 		}
 
