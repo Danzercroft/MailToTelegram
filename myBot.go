@@ -4,6 +4,10 @@ import (
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+
+	"github.com/emersion/go-imap/client"
+
+	"github.com/emersion/go-smtp"
 )
 
 func main() {
@@ -17,6 +21,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	c, err := client.DialTLS("mail.example.org:993", nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Don't forget to logout
+	defer c.Logout()
 
 	bot.Debug = true
 	// Create a new UpdateConfig struct with an offset of 0. Offsets are used
@@ -53,6 +66,13 @@ func main() {
 		// set fields on the `MessageConfig`.
 		msg.ReplyToMessageID = update.Message.MessageID
 
+		switch update.Message.Text {
+		case "open":
+			msg.ReplyMarkup = "1"
+		case "close":
+			msg.ReplyMarkup = tgbotapi.NewRemoveKeyboard(true)
+		}
+
 		// Okay, we're sending our message off! We don't care about the message
 		// we just sent, so we'll discard it.
 		if _, err := bot.Send(msg); err != nil {
@@ -62,4 +82,10 @@ func main() {
 			panic(err)
 		}
 	}
+	// Setup an unencrypted connection to a local mail server.
+	cl, err := smtp.Dial("localhost:25")
+	if err != nil {
+		return
+	}
+	defer cl.Close()
 }
