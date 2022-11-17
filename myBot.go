@@ -7,6 +7,8 @@ import (
 
 	"github.com/emersion/go-imap/client"
 
+	"database/sql"
+
 	"github.com/emersion/go-smtp"
 )
 
@@ -21,6 +23,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	db, err := sql.Open("mysql", "your_user:you_pas@tcp(127.0.0.1:3306)/mailbot")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
 
 	c, err := client.DialTLS("mail.example.org:993", nil)
 
@@ -57,10 +65,25 @@ func main() {
 			continue
 		}
 
+		// Create a new MessageConfig. We don't have text yet,
+		// so we leave it empty.
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
+
+		switch update.Message.Command() {
+		case "help":
+			msg.Text = "I understand /sayhi and /status."
+		case "getmail":
+			msg.Text = "Hi :)"
+		case "status":
+			msg.Text = "I'm ok."
+		default:
+			msg.Text = "I don't know that command"
+		}
+
 		// Now that we know we've gotten a new message, we can construct a
 		// reply! We'll take the Chat ID and Text from the incoming message
 		// and use it to create a new message.
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "dasd")
+		//msg := tgbotapi.NewMessage(update.Message.Chat.ID, "dasd")
 		// We'll also say that this message is a reply to the previous message.
 		// For any other specifications than Chat ID or Text, you'll need to
 		// set fields on the `MessageConfig`.
