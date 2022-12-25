@@ -1,0 +1,17 @@
+version: '3'
+services:
+  my-go-service:
+    build: .
+    ports:
+      - "80:80"
+    networks:
+      - botmailnet
+  doctron:
+    image: lampnick/doctron
+    ports:
+      - "8080:8080"
+    networks:
+      - botmailnet
+networks:
+  botmailnet:
+    driver: bridge

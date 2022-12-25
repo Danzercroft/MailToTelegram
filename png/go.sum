@@ -1,0 +1,4 @@
+github.com/SebastiaanKlippert/go-wkhtmltopdf v1.8.2 h1:n66+ofm9qVFC1qygyOJ1DgzSv2hSAO66XRbbMQ4JMNI=
+github.com/SebastiaanKlippert/go-wkhtmltopdf v1.8.2/go.mod h1:SQq4xfIdvf6WYKSDxAJc+xOJdolt+/bc1jnQKMtPMvQ=
+gopkg.in/gographics/imagick.v2 v2.6.2 h1:8ILTJzDKQKSYSfav+9GZs9H8zOOR2UtZVTWkUdFoiZ8=
+gopkg.in/gographics/imagick.v2 v2.6.2/go.mod h1:/QVPLV/iKdNttRKthmDkeeGg+vdHurVEPc8zkU0XgBk=
