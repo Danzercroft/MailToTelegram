@@ -6,12 +6,15 @@ services:
       - "80:80"
     networks:
       - botmailnet
-  doctron:
-    image: lampnick/doctron
+  mysql:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: bot_data
+      MYSQL_USER: bot
+      MYSQL_PASSWORD: 123
     ports:
-      - "8080:8080"
-    networks:
-      - botmailnet
+      - "3306:3306"
 networks:
   botmailnet:
     driver: bridge

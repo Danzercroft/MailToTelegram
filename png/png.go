@@ -1,3 +1,4 @@
+// Package provides functions generating PNG from diferent types
 package png
 
 import (
@@ -8,7 +9,8 @@ import (
 	"gopkg.in/gographics/imagick.v2/imagick"
 )
 
-func HtmlToPdf(html string) []byte {
+// Convert HTML to PNG
+func HtmlToPng(html string) []byte {
 	// Create new PDF generator
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
 	if err != nil {

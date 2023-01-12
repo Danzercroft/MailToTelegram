@@ -2,15 +2,45 @@ package main
 
 import (
 	"log"
+	"myBot/mail"
 	"myBot/png"
 	"strconv"
 
+	_ "github.com/go-sql-driver/mysql"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 
 	"github.com/emersion/go-smtp"
 )
 
 func main() {
+
+	var mysqlClientOpt mail.MysqlClientInitOpt
+	mysqlClientOpt.DBDriver = "mysql"
+	mysqlClientOpt.DBHost = "127.0.0.1"
+	mysqlClientOpt.DBPort = "3306"
+	mysqlClientOpt.DBName = "bot_data"
+	mysqlClientOpt.DBPass = "123"
+	mysqlClientOpt.DBUser = "bot"
+
+	mysqlClient, err := mail.NewMysqlClient(mysqlClientOpt)
+	if err != nil {
+		panic(err)
+	}
+
+	var emailClientOpt mail.ImapClientInitOpt
+	emailClientOpt.Addr = ""
+	emailClientOpt.IsTLS = true
+	emailClientOpt.Passwd = ""
+	emailClientOpt.UserName = ""
+
+	emailClient, err := mail.NewImapClient(emailClientOpt)
+	if err != nil {
+		panic(err)
+	}
+
+	emailClient.Login()
+	emailClient.SyncEmailsWithDB(mysqlClient)
+
 	html := `
 		<html>
 			<head>
@@ -23,62 +53,11 @@ func main() {
 			<body>
 				<h1>Hello, world!</h1>
 				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.</p>
-				<p>This is a test of the HTML to PNG conversion.1</p>
 			</body>
 		</html>
 	`
-	png.HtmlToPdf(html)
+	png.HtmlToPng(html)
+	mail.GetMessages(10)
 	test := 0
 	config, err := LoadConfig(".")
 	if err != nil {
